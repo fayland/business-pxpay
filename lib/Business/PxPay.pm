@@ -96,7 +96,7 @@ sub request_xml {
 sub result {
     my ( $self, $ResponseCode ) = @_;
     
-    my $xml = $self->result_xml($args);
+    my $xml = $self->result_xml($ResponseCode);
     my $resp = $self->{ua}->post($self->{url}, Content => $xml);
     unless ($resp->is_success) {
         croak $resp->status_line;
