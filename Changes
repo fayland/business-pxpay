@@ -1,5 +1,8 @@
 Revision history for Business-PxPay
 
+0.03    2010.01.29
+        use www.paymentexpress.com by default
+
 0.02    2009.11.18
         bug fix
 

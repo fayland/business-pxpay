@@ -26,7 +26,7 @@ sub new {
     $args->{userid} or croak 'userid is required';
     $args->{key}    or croak 'key is required';
 
-    $args->{url} ||= 'https://sec2.paymentexpress.com/pxpay/pxaccess.aspx';
+    $args->{url} ||= 'https://www.paymentexpress.com/pxpay/pxaccess.aspx';
     
     unless ( $args->{ua} ) {
         my $ua_args = delete $args->{ua_args} || {};
@@ -173,6 +173,16 @@ PxPayUserId & PxPayKey
 =item * C<ua_args>
 
 By default, we use LWP::UserAgent->new as the UserAgent. you can pass C<ua> or C<ua_args> to use a different one.
+
+=item * C<url>
+
+    my $pxpay = Business::PxPay->new(
+        userid => $user,
+        key    => $key,
+        url    => 'https://sec2.paymentexpress.com/pxpay/pxaccess.aspx', # to test?
+    );
+
+The URL is 'https://www.paymentexpress.com/pxpay/pxaccess.aspx' by default.
 
 =back
 
