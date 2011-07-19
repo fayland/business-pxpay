@@ -26,7 +26,7 @@ sub new {
     $args->{userid} or croak 'userid is required';
     $args->{key}    or croak 'key is required';
 
-    $args->{url} ||= 'https://www.paymentexpress.com/pxpay/pxaccess.aspx';
+    $args->{url} ||= 'https://sec.paymentexpress.com/pxpay/pxaccess.aspx';
     
     unless ( $args->{ua} ) {
         my $ua_args = delete $args->{ua_args} || {};
