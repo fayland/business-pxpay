@@ -10,6 +10,8 @@ use LWP::UserAgent;
 use XML::Simple qw/XMLin XMLout/;
 use vars qw/%TRANSACTIONS/;
 
+our $VERSION = '0.05';
+
 %TRANSACTIONS = (
     purchase      => 'Purchase',
     credit        => 'Refund',
@@ -21,25 +23,25 @@ use vars qw/%TRANSACTIONS/;
 sub new {
     my $class = shift;
     my $args = scalar @_ % 2 ? shift : { @_ };
-    
+
     # validate
     $args->{userid} or croak 'userid is required';
     $args->{key}    or croak 'key is required';
 
     $args->{url} ||= 'https://sec.paymentexpress.com/pxpay/pxaccess.aspx';
-    
+
     unless ( $args->{ua} ) {
         my $ua_args = delete $args->{ua_args} || {};
         $args->{ua} = LWP::UserAgent->new(%$ua_args);
     }
-    
+
     bless $args, $class;
 }
 
 sub request {
     my $self = shift;
     my $args = scalar @_ % 2 ? shift : { @_ };
-    
+
     my $xml = $self->request_xml($args);
     my $resp = $self->{ua}->post($self->{url}, Content => $xml);
     unless ($resp->is_success) {
@@ -52,7 +54,7 @@ sub request {
 sub request_xml {
     my $self = shift;
     my $args = scalar @_ % 2 ? shift : { @_ };
-    
+
     # validate
     my $TxnType = $args->{TxnType} || croak 'TxnType is required';
     my $Amount = $args->{Amount} || $self->{Amount} || croak 'Amount is required';
@@ -61,7 +63,7 @@ sub request_xml {
     my $UrlFail    = $args->{UrlFail} || $self->{UrlFail} || croak 'UrlFail is required';
     my $UrlSuccess = $args->{UrlSuccess} || $self->{UrlSuccess} || croak 'UrlSuccess is required';
     my $MerchantReference = $args->{MerchantReference} || croak 'MerchantReference is required';
-    
+
     # UrlFail can't contain '?' or '&'
     if ( $UrlFail =~ /\?/ or $UrlFail =~ /\&/ ) {
         croak "UrlFail can't contain '?' or '&', please use TxnData1, TxnData2, TxnData3 or Opt\n";
@@ -69,7 +71,7 @@ sub request_xml {
     if ( $UrlSuccess =~ /\?/ or $UrlSuccess =~ /\&/ ) {
         croak "UrlSuccess can't contain '?' or '&', please use TxnData1, TxnData2, TxnData3 or Opt\n";
     }
-    
+
     my $request = {
         GenerateRequest => {
             PxPayUserId => [ $self->{userid} ],
@@ -95,7 +97,7 @@ sub request_xml {
 
 sub result {
     my ( $self, $ResponseCode ) = @_;
-    
+
     my $xml = $self->result_xml($ResponseCode);
     my $resp = $self->{ua}->post($self->{url}, Content => $xml);
     unless ($resp->is_success) {
@@ -107,7 +109,7 @@ sub result {
 
 sub result_xml {
     my ( $self, $ResponseCode ) = @_;
-    
+
     my $request = {
         ProcessResponse => {
             PxPayUserId => [ $self->{userid} ],
@@ -129,7 +131,7 @@ __END__
         userid => 'TestAccount',
         key    => 'c9fff215b9e2add78d252b78e214880b46a906e73190a380483c1c29acab4157'
     );
-    
+
     # when submit the cart order
     if ( $submit_order ) {
         my $rtn = $pxpay->request($args); # $args from CGI params
@@ -242,7 +244,7 @@ Required when adding a card to the DPS system for recurring billing. Set element
 
 =item * C<TxnId>
 
-A value that uniquely identifies the transaction 
+A value that uniquely identifies the transaction
 
 =item * C<TxnData1>
 
