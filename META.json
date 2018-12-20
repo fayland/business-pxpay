@@ -34,6 +34,14 @@
             "Dist::Milla" : "v1.0.18",
             "Test::Pod" : "1.41"
          }
+      },
+      "runtime" : {
+         "requires" : {
+            "LWP::UserAgent" : "0",
+            "Net::SSLeay" : "0",
+            "URI::Escape" : "0",
+            "XML::Simple" : "0"
+         }
       }
    },
    "release_status" : "stable",
